@@ -1,12 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
+	"github.com/M-iklan/controller"
 	"github.com/M-iklan/database"
+	"github.com/M-iklan/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/template/html"
 	"github.com/joho/godotenv"
 )
 
@@ -22,15 +24,24 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = db.AutoMigrate()
+	err = db.AutoMigrate(models.Iklan{})
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	app := fiber.New()
+	engine := html.New("./views", ".html")
+	app := fiber.New(fiber.Config{
+		Views: engine,
+	})
 
-	app.Get("/", func(c *fiber.Ctx) error { fmt.Println("test"); return nil })
+	app.Static("/", "./public", fiber.Static{
+		Index: "",
+	})
+
+	adsDisplay := controller.NewAdsDisplay(db)
+
+	adsDisplay.MountRouter(app)
 
 	app.Listen(os.Getenv("SERVER_PORT"))
 
