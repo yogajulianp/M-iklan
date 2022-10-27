@@ -10,7 +10,11 @@
 				&emsp;
 				<p class="img-card-1"><img src="/public/ads/image/{{ .DataIklan.Image }}" style="width:630px;height:360px;" class="rounded mx-auto d-block" alt="{{ .DataIklan.Name }}"></p>
 				&emsp; &emsp;
-       				<p class="img-card-1"><video src="/public/ads/video/{{ .DataIklan.Video }}" style="width:630px;height:360px;" class="rounded mx-auto d-block" alt="{{ .DataIklan.Name }}"></p>
+       				<p class="img-card-1">
+						<video width="630" height="360" class="rounded mx-auto d-block" controls>
+						<source src="/public/ads/video/{{ .DataIklan.Video }}" style="width:630px;height:360px;"  alt="{{ .DataIklan.Name }}" type="video/mp4">
+						</video>
+					</p>
 				&emsp; &emsp;
 				<div class=" container mb-3">
 					<p>
