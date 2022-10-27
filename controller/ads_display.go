@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/M-iklan/models"
@@ -25,6 +26,7 @@ func (ads *AdsDisplay) MountRouter(app *fiber.App) {
 	router.Get("/getads-video", ads.GetAdsVideo)
 	router.Get("/iklandetail", ads.GetAdsAllType)
 	router.Get("/iklandetail/:id", ads.GetAdsById)
+	router.Get("/detailiklan/:id", ads.GetDetailsAds)
 }
 
 func (ads *AdsDisplay) GetAdsImage(c *fiber.Ctx) error {
@@ -96,6 +98,23 @@ func (ads *AdsDisplay) GetAdsVideo(c *fiber.Ctx) error {
 		"video_path": fmt.Sprintf("localhost%s%s", os.Getenv("SERVER_PORT"), dataIklan.Video),
 		"id_iklan":   dataIklan.ID,
 		"id_user":    dataIklan.Vendor_fk,
+	})
+
+}
+
+func (ads *AdsDisplay) GetDetailsAds(c *fiber.Ctx) error {
+	id := c.Params("id")
+	idn, _ := strconv.Atoi(id)
+	var iklanDetail models.Iklan
+	err := models.ReadIklanById(ads.db, &iklanDetail, idn)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.ErrInternalServerError)
+	}
+	fmt.Println(iklanDetail)
+
+	return c.Render("DetailIklan", fiber.Map{
+		"Title":     "Daftar Produk",
+		"DataIklan": iklanDetail,
 	})
 
 }

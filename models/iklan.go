@@ -24,3 +24,10 @@ func GetAllIklanPublishedById(db *gorm.DB, id int) (ListIklan *Iklan, err error)
 	_, err = db.Where("is_published IS TRUE AND deleted_at IS NULL AND id = ?", id).First(&ListIklan).Rows()
 	return
 }
+func ReadIklanById(db *gorm.DB, iklan *Iklan, id int) (err error) {
+	err = db.Where("id=?", id).First(iklan).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
