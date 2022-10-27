@@ -31,3 +31,8 @@ func ReadIklanById(db *gorm.DB, iklan *Iklan, id int) (err error) {
 	}
 	return nil
 }
+func UpdatePublikasiIklan(db *gorm.DB, iklan *Iklan) (err error) {
+	db.Save(iklan)
+
+	return nil
+}

@@ -27,6 +27,7 @@ func (ads *AdsDisplay) MountRouter(app *fiber.App) {
 	router.Get("/iklandetail", ads.GetAdsAllType)
 	router.Get("/iklandetail/:id", ads.GetAdsById)
 	router.Get("/detailiklan/:id", ads.GetDetailsAds)
+	router.Post("/detailiklan/:id", ads.Publikasi)
 }
 
 func (ads *AdsDisplay) GetAdsImage(c *fiber.Ctx) error {
@@ -110,11 +111,48 @@ func (ads *AdsDisplay) GetDetailsAds(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.ErrInternalServerError)
 	}
-	fmt.Println(iklanDetail)
+	fmt.Println(iklanDetail.IsPublished)
+	var statusPublikasi string = ""
+	if iklanDetail.IsPublished == false {
+		statusPublikasi = "Belum Di Publikasi"
+	} else {
+		statusPublikasi = "Sudah Di Publikasi"
+	}
 
 	return c.Render("DetailIklan", fiber.Map{
-		"Title":     "Daftar Produk",
-		"DataIklan": iklanDetail,
+		"Title":           "Daftar Produk",
+		"DataIklan":       iklanDetail,
+		"statusPublikasi": statusPublikasi,
+	})
+
+}
+
+func (ads *AdsDisplay) Publikasi(c *fiber.Ctx) error {
+	id := c.Params("id")
+	idn, _ := strconv.Atoi(id)
+	var iklanDetail models.Iklan
+	err := models.ReadIklanById(ads.db, &iklanDetail, idn)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.ErrInternalServerError)
+	}
+
+	if err := c.BodyParser(&iklanDetail); err != nil {
+		return c.SendStatus(400)
+	}
+	iklanDetail.IsPublished = true
+	models.UpdatePublikasiIklan(ads.db, &iklanDetail)
+	fmt.Println(iklanDetail.IsPublished)
+	var statusPublikasi string = ""
+	if iklanDetail.IsPublished == false {
+		statusPublikasi = "Belum Di Publikasi"
+	} else {
+		statusPublikasi = "Sudah Di Publikasi"
+	}
+
+	return c.Render("DetailIklan", fiber.Map{
+		"Title":           "Daftar Produk",
+		"DataIklan":       iklanDetail,
+		"statusPublikasi": statusPublikasi,
 	})
 
 }
