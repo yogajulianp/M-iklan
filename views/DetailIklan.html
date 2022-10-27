@@ -1,12 +1,12 @@
 {{template "templates/header" .}}
 
-<h1>Detail Iklan</h1>
+<h1>Detail Ads</h1>
 <br>
 <div class="container">
 	<br>
 		<div class="p-5 mb-4 bg-light rounded-3">
 			<div>
-				<h1>Nama Iklan : {{ .DataIklan.Name }}</h1>
+				<h1>Ads Name : {{ .DataIklan.Name }}</h1>
 				&emsp;
 				<p class="img-card-1"><img src="/public/ads/image/{{ .DataIklan.Image }}" style="width:630px;height:360px;" class="rounded mx-auto d-block" alt="{{ .DataIklan.Name }}"></p>
 				&emsp; &emsp;
@@ -14,13 +14,13 @@
 				&emsp; &emsp;
 				<div class=" container mb-3">
 					<p>
-						<b>Description Iklan :</b> {{ .DataIklan.Description }}
+						<b>Ads Description :</b> {{ .DataIklan.Description }}
 					</p>
 				</div>
 				
 				<!-- &emsp; -->
-			<p class="text"><b>View Iklan : {{ .DataIklan.View }}</b></p>
-			<p class="text"><b>Revenue Iklan : Rp.{{ .DataIklan.Revenue }}</b></p>
+			<p class="text"><b>View Ads : {{ .DataIklan.View }}</b></p>
+			<p class="text"><b>Ads Revenue : Rp.{{ .DataIklan.Revenue }}</b></p>
 			
 				<form method="POST" action="/transactions/create" class="mt-4">
 					<!-- <input type="hidden" name="idproduck" class="form-control" id="id" value=""/> -->
@@ -34,9 +34,6 @@
 						</button>
 					</small>
 				</form>
-					 
-					
-				
 			</div>
 				<br>
 			<div>
