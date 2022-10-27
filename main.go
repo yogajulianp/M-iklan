@@ -43,6 +43,21 @@ func main() {
 
 	adsDisplay.MountRouter(app)
 
+	app.Get("/dashboard", func(c *fiber.Ctx) error {	
+
+		return c.Render("admin/dashboard", fiber.Map{
+			"Title": "Dashboard",
+		})
+	})
+
+	app.Get("/login", func(c *fiber.Ctx) error {	
+
+		return c.Render("admin/login", fiber.Map{
+			"Title": "Login",
+		})
+	})
+
 	app.Listen(os.Getenv("SERVER_PORT"))
+
 
 }
