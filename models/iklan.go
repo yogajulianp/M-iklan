@@ -36,3 +36,8 @@ func UpdatePublikasiIklan(db *gorm.DB, iklan *Iklan) (err error) {
 
 	return nil
 }
+func CancelPublikasiById(db *gorm.DB, iklan *Iklan, id int) (err error) {
+	db.Where("id=?", id).Delete(iklan)
+
+	return nil
+}
