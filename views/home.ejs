@@ -1,0 +1,59 @@
+<%- include('templates/header') %>
+<%- include('templates/sidebar') %>
+
+<div class="col-sm-9 padding-right">
+
+	<div class="category-tab">
+		<!--category-tab-->
+
+		<div class="col-sm-12">
+			<ul class="nav nav-tabs">
+				<% categories.forEach(function(elemen) {%>
+				<li><a href="<%=elemen.id%>" data-toggle="tab"><%=elemen.category%></a></li>
+				<% }); %>
+			</ul>
+		</div>
+
+
+
+		<div class="tab-content">
+			<%categories.forEach(function(elemen) {%>
+			<div class="tab-pane fade active in" id="<%=elemen.id%>">
+				<%} );%>
+				<%products.forEach(function(item) {%>
+				<div class="col-sm-3">
+					<div class="product-image-wrapper">
+						<div class="single-products">
+							<div class="productinfo text-center">
+								<a href="/products/detail/<%=item.id%> ">
+									<img src="/<%= item.image %>" class="card-img-top" alt="<%=item.title%>">
+								</a>
+								<h2>Rp <%=item.price%></h2>
+								<p><a href="/products/detail/<%=item.id%>" class="card-title"><%=item.name%></a></p>
+
+								<a href="/products/detail/<%=item.id%> " class="btn btn-default add-to-cart"><i
+										class="fa fa-shopping-cart"></i>Lihat selengkapnya</a>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<%} );%>
+
+			</div>
+
+
+
+
+		</div>
+	</div>
+	<!--/category-tab-->
+
+
+
+</div>
+</div>
+</div>
+</section>
+
+<%- include('templates/footer') %>
