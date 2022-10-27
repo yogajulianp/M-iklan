@@ -56,13 +56,13 @@ func (controller *IklanStatusController) GetDetailIklanStatus(c *fiber.Ctx) erro
 	if err := models.ReadStatusById(controller.Db, &iklanStatus, uint(id)); err != nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
-	var iklan models.Iklan
-	if err := models.ReadIklanById(controller.Db, &iklan, iklanStatus.IklanID); err != nil {
-		return c.SendStatus(500)
-	}
+	// var iklan models.Iklan
+	// if err := models.ReadIklanById(controller.Db, &iklan, iklanStatus.IklanID); err != nil {
+	// 	return c.SendStatus(500)
+	// }
 	return c.JSON(fiber.Map{
 		"iklan status": iklanStatus,
-		"detail iklan": iklan,
+		//"detail iklan": iklan,
 	})
 }
 
