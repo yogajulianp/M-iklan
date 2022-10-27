@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -18,6 +19,9 @@ type Iklan struct {
 
 func GetAllIklanPublished(db *gorm.DB) (ListIklan []Iklan, err error) {
 	_, err = db.Where("is_published IS TRUE AND deleted_at IS NULL").Find(&ListIklan).Rows()
+	if len(ListIklan) == 0 {
+		return ListIklan, fiber.ErrNotFound
+	}
 	return
 }
 func GetAllIklanPublishedById(db *gorm.DB, id int) (ListIklan *Iklan, err error) {
