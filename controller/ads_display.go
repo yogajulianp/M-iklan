@@ -41,7 +41,7 @@ func (ads *AdsDisplay) GetAdsImage(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":       fiber.StatusOK,
-		"image_path": fmt.Sprintf("localhost%s%s", os.Getenv("SERVER_PORT"), dataIklan.Image),
+		"image_path": fmt.Sprintf("localhost%s/ads/image/%s", os.Getenv("SERVER_PORT"), dataIklan.Image),
 		"id_iklan":   dataIklan.ID,
 		"id_user":    dataIklan.Vendor_fk,
 	})
@@ -49,6 +49,9 @@ func (ads *AdsDisplay) GetAdsImage(c *fiber.Ctx) error {
 
 func (ads *AdsDisplay) GetAdsAllType(c *fiber.Ctx) error {
 	listIklan, err := models.GetAllIklanPublished(ads.db)
+	if err == fiber.ErrNotFound {
+		return c.Status(fiber.StatusNotFound).JSON(err)
+	}
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.ErrInternalServerError)
 	}
@@ -58,8 +61,8 @@ func (ads *AdsDisplay) GetAdsAllType(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":       fiber.StatusOK,
-		"image_path": fmt.Sprintf("localhost%s%s", os.Getenv("SERVER_PORT"), dataIklan.Image),
-		"video_path": fmt.Sprintf("localhost%s%s", os.Getenv("SERVER_PORT"), dataIklan.Video),
+		"image_path": fmt.Sprintf("localhost%s/ads/image/%s", os.Getenv("SERVER_PORT"), dataIklan.Image),
+		"video_path": fmt.Sprintf("localhost%s/ads/video/%s", os.Getenv("SERVER_PORT"), dataIklan.Video),
 		"id_iklan":   dataIklan.ID,
 		"id_user":    dataIklan.Vendor_fk,
 	})
@@ -78,8 +81,8 @@ func (ads *AdsDisplay) GetAdsById(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":       fiber.StatusOK,
-		"image_path": fmt.Sprintf("localhost%s%s", os.Getenv("SERVER_PORT"), iklan.Image),
-		"video_path": fmt.Sprintf("localhost%s%s", os.Getenv("SERVER_PORT"), iklan.Video),
+		"image_path": fmt.Sprintf("localhost%s/ads/image/%s", os.Getenv("SERVER_PORT"), iklan.Image),
+		"video_path": fmt.Sprintf("localhost%s/ads/video/%s", os.Getenv("SERVER_PORT"), iklan.Video),
 		"id_iklan":   iklan.ID,
 		"id_user":    iklan.Vendor_fk,
 	})
@@ -96,7 +99,7 @@ func (ads *AdsDisplay) GetAdsVideo(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":       fiber.StatusOK,
-		"video_path": fmt.Sprintf("localhost%s%s", os.Getenv("SERVER_PORT"), dataIklan.Video),
+		"video_path": fmt.Sprintf("localhost%s/ads/video/%s", os.Getenv("SERVER_PORT"), dataIklan.Video),
 		"id_iklan":   dataIklan.ID,
 		"id_user":    dataIklan.Vendor_fk,
 	})
