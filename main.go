@@ -38,19 +38,20 @@ func main() {
 	app.Static("/", "./public", fiber.Static{
 		Index: "",
 	})
+	app.Static("/public", "./public")
 
 	adsDisplay := controller.NewAdsDisplay(db)
 
 	adsDisplay.MountRouter(app)
 
-	app.Get("/dashboard", func(c *fiber.Ctx) error {	
+	app.Get("/dashboard", func(c *fiber.Ctx) error {
 
 		return c.Render("admin/dashboard", fiber.Map{
 			"Title": "Dashboard",
 		})
 	})
 
-	app.Get("/login", func(c *fiber.Ctx) error {	
+	app.Get("/login", func(c *fiber.Ctx) error {
 
 		return c.Render("admin/login", fiber.Map{
 			"Title": "Login",
@@ -58,6 +59,5 @@ func main() {
 	})
 
 	app.Listen(os.Getenv("SERVER_PORT"))
-
 
 }
