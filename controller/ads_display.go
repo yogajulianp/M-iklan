@@ -167,7 +167,7 @@ func (ads *AdsDisplay) CancelPublikasi(c *fiber.Ctx) error {
 
 	var iklanDetail models.Iklan
 
-	err := models.CancelPublikasiById(ads.db, &iklan, idn)
+	err := models.CancelPublikasiById(ads.db, &iklanDetail, idn)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.ErrInternalServerError)
 	}
