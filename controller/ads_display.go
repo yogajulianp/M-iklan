@@ -9,6 +9,7 @@ import (
 
 	"github.com/M-iklan/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/yudapc/go-rupiah"
 	"gorm.io/gorm"
 )
 
@@ -29,6 +30,8 @@ func (ads *AdsDisplay) MountRouter(app *fiber.App) {
 	router.Get("/detailiklan/:id", ads.GetDetailsAds)
 	router.Post("/detailiklan/:id", ads.Publikasi)
 	router.Get("/canceliklan/:id", ads.CancelPublikasi)
+	router.Get("/getrevenue-iklan/:id", ads.GetRevenueByIdIklan)
+	router.Get("/getrevenue-vendor/:id", ads.GetRevenueByIdVendor)
 }
 
 func (ads *AdsDisplay) GetAdsImage(c *fiber.Ctx) error {
@@ -41,6 +44,7 @@ func (ads *AdsDisplay) GetAdsImage(c *fiber.Ctx) error {
 	dataIklan := listIklan[rand.Intn(len(listIklan))]
 
 	dataIklan.View++
+	dataIklan.Revenue = models.RevenueCalculation(dataIklan.Revenue)
 	err = models.UpdatePublikasiIklan(ads.db, &dataIklan)
 
 	if err != nil {
@@ -68,6 +72,7 @@ func (ads *AdsDisplay) GetAdsAllType(c *fiber.Ctx) error {
 	dataIklan := listIklan[rand.Intn(len(listIklan))]
 
 	dataIklan.View++
+	dataIklan.Revenue = models.RevenueCalculation(dataIklan.Revenue)
 	err = models.UpdatePublikasiIklan(ads.db, &dataIklan)
 
 	if err != nil {
@@ -95,6 +100,7 @@ func (ads *AdsDisplay) GetAdsById(c *fiber.Ctx) error {
 	}
 
 	iklan.View++
+	iklan.Revenue = models.RevenueCalculation(iklan.Revenue)
 	err = models.UpdatePublikasiIklan(ads.db, iklan)
 
 	if err != nil {
@@ -120,6 +126,7 @@ func (ads *AdsDisplay) GetAdsVideo(c *fiber.Ctx) error {
 	dataIklan := listIklan[rand.Intn(len(listIklan))]
 
 	dataIklan.View++
+	dataIklan.Revenue = models.RevenueCalculation(dataIklan.Revenue)
 	err = models.UpdatePublikasiIklan(ads.db, &dataIklan)
 
 	if err != nil {
@@ -206,4 +213,39 @@ func (ads *AdsDisplay) CancelPublikasi(c *fiber.Ctx) error {
 
 	return c.Redirect(fmt.Sprintf("/ads/detailiklan/%d", idn))
 
+}
+
+func (ads *AdsDisplay) GetRevenueByIdIklan(c *fiber.Ctx) error {
+	id := c.Params("id")
+	idn, _ := strconv.Atoi(id)
+	iklan := models.Iklan{}
+	err := models.ReadIklanById(ads.db, &iklan, idn)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.ErrInternalServerError)
+	}
+
+	revenueIdr := rupiah.FormatRupiah(iklan.Revenue)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code":     fiber.StatusOK,
+		"revenue":  revenueIdr,
+		"id_iklan": iklan.ID,
+		"id_user":  iklan.Vendor_fk,
+	})
+}
+
+func (ads *AdsDisplay) GetRevenueByIdVendor(c *fiber.Ctx) error {
+	id := c.Params("id")
+	idn, _ := strconv.Atoi(id)
+
+	totalRevenue, countIklan, err := models.GetTotalRevenueVendor(ads.db, idn)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.ErrInternalServerError)
+	}
+	totalRevenueIdr := rupiah.FormatRupiah(totalRevenue)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code":          fiber.StatusOK,
+		"total_revenue": totalRevenueIdr,
+		"id_user":       idn,
+		"count_iklan":   countIklan,
+	})
 }
