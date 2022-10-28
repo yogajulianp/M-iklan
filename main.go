@@ -40,9 +40,11 @@ func main() {
 	})
 	app.Static("/public", "./public")
 
-	adsDisplay := controller.NewAdsDisplay(db)
+	adsDisplay := controllers.NewAdsDisplay(db)
+	iklancontroller := controllers.NewIklan(db)
 
 	adsDisplay.MountRouter(app)
+	iklancontroller.RouteIklan(app)
 
 	app.Get("/dashboard", func(c *fiber.Ctx) error {
 
