@@ -23,7 +23,6 @@ func (iklancontroller *Iklan) RouteIklan(app *fiber.App) {
 	router := app.Group("/admin/iklan")
 	router.Get("/", iklancontroller.GetAllIklan)
 	router.Get("/create", iklancontroller.AddIklan)
-
 	router.Post("/create", iklancontroller.AddPostedIklan)
 	router.Get("/detail/:id", iklancontroller.DetailIklan)
 	router.Get("/edit/:id", iklancontroller.EditIklan)
@@ -31,7 +30,7 @@ func (iklancontroller *Iklan) RouteIklan(app *fiber.App) {
 	router.Get("/delete/:id", iklancontroller.DeleteIklan)
 }
 
-// GET /iklan
+// GET /admin/iklan
 func (iklancontroller *Iklan) GetAllIklan(c *fiber.Ctx) error {
 	// Load all Iklans
 	var iklans []models.Iklan
@@ -46,14 +45,14 @@ func (iklancontroller *Iklan) GetAllIklan(c *fiber.Ctx) error {
 	})
 }
 
-// GET /iklan/create
+// GET /admin/iklan/create
 func (iklancontroller *Iklan) AddIklan(c *fiber.Ctx) error {
 	return c.Render("admin/iklan/create", fiber.Map{
 		"Title": "Tambah Iklan",
 	})
 }
 
-// POST /iklan/create
+// POST /admin/iklan/create
 func (iklancontroller *Iklan) AddPostedIklan(c *fiber.Ctx) error {
 	//myform := new(models.Iklan)
 	var iklan models.Iklan
@@ -62,6 +61,7 @@ func (iklancontroller *Iklan) AddPostedIklan(c *fiber.Ctx) error {
 		return c.Redirect("/admin/iklan")
 	}
 
+	// Get image
 	// Parse the multipart form:
 	if form, err := c.MultipartForm(); err == nil {
 		// => *multipart.Form
@@ -82,6 +82,27 @@ func (iklancontroller *Iklan) AddPostedIklan(c *fiber.Ctx) error {
 		}
 	}
 
+	// Get video
+	// Parse the multipart form:
+	if form, err := c.MultipartForm(); err == nil {
+		// => *multipart.Form
+
+		// Get all files from "video" key:
+		files := form.File["video"]
+		// => []*multipart.FileHeader
+
+		// Loop through files:
+		for _, file := range files {
+			fmt.Println(file.Filename, file.Size, file.Header["Content-Type"][0])
+
+			// Save the files to disk:
+			iklan.Video = fmt.Sprintf("/public/iklan/videos/%s", file.Filename)
+			if err := c.SaveFile(file, fmt.Sprintf("public/iklan/videos/%s", file.Filename)); err != nil {
+				return err
+			}
+		}
+	}
+
 	// save iklan
 	err := models.CreateIklan(iklancontroller.Db, &iklan)
 	if err != nil {
@@ -91,7 +112,7 @@ func (iklancontroller *Iklan) AddPostedIklan(c *fiber.Ctx) error {
 	return c.Redirect("/admin/iklan")
 }
 
-// GET /iklan/detail:id
+// GET /admin/iklan/detail:id
 func (iklancontroller *Iklan) DetailIklan(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
@@ -113,7 +134,7 @@ func (iklancontroller *Iklan) DetailIklan(c *fiber.Ctx) error {
 	})
 }
 
-// GET /iklan/ubah/:id
+// GET /admin/iklan/ubah/:id
 func (iklancontroller *Iklan) EditIklan(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
@@ -131,7 +152,7 @@ func (iklancontroller *Iklan) EditIklan(c *fiber.Ctx) error {
 	})
 }
 
-// POST /iklan/ubah/:id
+// POST /admin/iklan/ubah/:id
 func (iklancontroller *Iklan) AddEditedIklan(c *fiber.Ctx) error {
 	var iklan models.Iklan
 
@@ -143,6 +164,7 @@ func (iklancontroller *Iklan) AddEditedIklan(c *fiber.Ctx) error {
 		return c.Redirect("/admin/iklan/edit")
 	}
 
+	// Get image
 	// Parse the multipart form:
 	if form, err := c.MultipartForm(); err == nil {
 		// => *multipart.Form
@@ -163,6 +185,27 @@ func (iklancontroller *Iklan) AddEditedIklan(c *fiber.Ctx) error {
 		}
 	}
 
+	// Get video
+	// Parse the multipart form:
+	if form, err := c.MultipartForm(); err == nil {
+		// => *multipart.Form
+
+		// Get all files from "video" key:
+		files := form.File["video"]
+		// => []*multipart.FileHeader
+
+		// Loop through files:
+		for _, file := range files {
+			fmt.Println(file.Filename, file.Size, file.Header["Content-Type"][0])
+
+			// Save the files to disk:
+			iklan.Video = fmt.Sprintf("/public/iklan/videos/%s", file.Filename)
+			if err := c.SaveFile(file, fmt.Sprintf("public/iklan/videos/%s", file.Filename)); err != nil {
+				return err
+			}
+		}
+	}
+
 	// save iklan
 	err := models.UpdateIklan(iklancontroller.Db, &iklan)
 	if err != nil {
@@ -172,7 +215,7 @@ func (iklancontroller *Iklan) AddEditedIklan(c *fiber.Ctx) error {
 	return c.Redirect("/admin/iklan/edit")
 }
 
-// GET /iklan/hapus/:id
+// GET /admin/iklan/hapus/:id
 func (iklancontroller *Iklan) DeleteIklan(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
