@@ -166,28 +166,16 @@ func (ads *AdsDisplay) CancelPublikasi(c *fiber.Ctx) error {
 	idn, _ := strconv.Atoi(id)
 
 	var iklanDetail models.Iklan
+	iklanDetail.ID = uint(idn)
 
-	err := models.CancelPublikasiById(ads.db, &iklanDetail, idn)
+	err := models.ReadIklanById(ads.db, &iklanDetail, idn)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.ErrInternalServerError)
 	}
-	if err := c.BodyParser(&iklanDetail); err != nil {
-		return c.SendStatus(400)
-	}
 	iklanDetail.IsPublished = false
-	models.UpdatePublikasiIklan(ads.db, &iklanDetail)
-	fmt.Println(iklanDetail.IsPublished)
-	var statusPublikasi string = ""
-	if iklanDetail.IsPublished == false {
-		statusPublikasi = "Belum Di Publikasi"
-	} else {
-		statusPublikasi = "Sudah Di Publikasi"
-	}
 
-	return c.Render("DetailIklan", fiber.Map{
-		"Title":           "Daftar Produk",
-		"DataIklan":       iklanDetail,
-		"statusPublikasi": statusPublikasi,
-	})
+	models.UpdatePublikasiIklan(ads.db, &iklanDetail)
+
+	return c.Redirect(fmt.Sprintf("/ads/detailiklan/%d", idn))
 
 }
