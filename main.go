@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/M-iklan/controller"
+	"github.com/M-iklan/route"
 	"github.com/M-iklan/database"
 	"github.com/M-iklan/models"
 	"github.com/gofiber/fiber/v2"
@@ -40,6 +41,7 @@ func main() {
 	})
 	app.Static("/public", "./public")
 
+	route.RouteInit(app)
 	adsDisplay := controller.NewAdsDisplay(db)
 	iklancontroller := controller.NewIklan(db)
 	iklanapicontroller := controller.NewIklanAPI(db)

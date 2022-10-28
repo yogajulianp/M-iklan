@@ -23,11 +23,19 @@ type AuthController struct {
 func InitAuthController() *AuthController {
 	return &AuthController{}
 }
+// GET /login
+func (controller *AuthController) LoginForm (c *fiber.Ctx) error {
+	// load all products
+
+	return c.Render("vendorlogin", fiber.Map{
+		"Title": "Login Vendor",
+	})
+}
 
 func (controller *AuthController) AuthLogin(c *fiber.Ctx) error {
 	loginRequest := new(LoginRequest)
 	if err := c.BodyParser(&loginRequest); err != nil {
-		return err
+		return c.Redirect("/login")
 	}
 	fmt.Println(loginRequest)
 
@@ -41,14 +49,13 @@ func (controller *AuthController) AuthLogin(c *fiber.Ctx) error {
 		})
 	}
 
+
 	//check available user
 	var vendor models.Vendor
 	db,_ := database.NewDatabasePostgres()
 	err := db.Where("username = ?", loginRequest.Username).First(&vendor).Error
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"message": "wrong credentials",
-		})
+		return c.Redirect("/login")
 	}
 
 	//check validasi password
@@ -59,7 +66,5 @@ func (controller *AuthController) AuthLogin(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"token": "secret",
-	})
+	return c.Redirect("/admin/iklan")
 }

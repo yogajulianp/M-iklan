@@ -32,3 +32,22 @@ func ReadVendor(db *gorm.DB, vendor *[]Vendor)(err error) {
 	}
 	return nil
 }
+
+
+func ReadVendorById(db *gorm.DB, vendor *Vendor, id int)(err error) {
+	err = db.Where("id=?", id).First(vendor).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func UpdateVendor(db *gorm.DB, vendor *Vendor)(err error) {
+	db.Save(vendor)
+	
+	return nil
+}
+func DeleteVendorById(db *gorm.DB, vendor *Vendor, id int)(err error) {
+	db.Where("id=?", id).Delete(vendor)
+	
+	return nil
+}
