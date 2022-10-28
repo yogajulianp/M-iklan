@@ -40,9 +40,9 @@ func main() {
 	})
 	app.Static("/public", "./public")
 
-	adsDisplay := controllers.NewAdsDisplay(db)
-	iklancontroller := controllers.NewIklan(db)
-	iklanapicontroller := controllers.NewIklanAPI(db)
+	adsDisplay := controller.NewAdsDisplay(db)
+	iklancontroller := controller.NewIklan(db)
+	iklanapicontroller := controller.NewIklanAPI(db)
 
 	adsDisplay.MountRouter(app)
 	iklancontroller.RouteIklan(app)
