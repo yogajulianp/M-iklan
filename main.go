@@ -42,9 +42,11 @@ func main() {
 
 	adsDisplay := controllers.NewAdsDisplay(db)
 	iklancontroller := controllers.NewIklan(db)
+	iklanapicontroller := controllers.NewIklanAPI(db)
 
 	adsDisplay.MountRouter(app)
 	iklancontroller.RouteIklan(app)
+	iklanapicontroller.RouteIklanAPI(app)
 
 	app.Get("/dashboard", func(c *fiber.Ctx) error {
 
