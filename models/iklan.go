@@ -45,3 +45,10 @@ func CancelPublikasiById(db *gorm.DB, iklan *Iklan, id int) (err error) {
 
 	return nil
 }
+func UpdateViewsIklan(db *gorm.DB, iklan *Iklan, id int, view int) (err error) {
+	err = db.Model(iklan).Where("id = ?", id).Update("view", view).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
