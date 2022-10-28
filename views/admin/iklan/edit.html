@@ -1,0 +1,109 @@
+{{ template "admin/templates/admin_header" .}}
+{{ template "admin/templates/admin_sidebar" .}}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-warning">
+        {{ .Title }}
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <form method="post" action="/admin/iklan/edit/{{ .Iklan.Id }}" enctype="multipart/form-data">
+            <div class="form-body">
+
+              <div class="col-md-6 col-12 mb-5">
+                <div class="form-group">
+                  <label for="name">Nama Iklan</label>
+                  <input type="text" id="name" class="form-control" placeholder="Nama Iklan" name="name" required
+                    value="{{ .Iklan.Name }}">
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12 mb-5">
+                <div class="form-group">
+                  <label class="form-label" for="image">Ubah Foto Iklan</label>
+                  <br>
+                  <input type="file" id="image" name="image" value="{{ .Iklan.Image }}">
+                  <div class="card mt-2" style="width: 20rem;">
+                    <img src="{{ .Iklan.Image }}" class="img-fluid" alt="{{ .Iklan.Name }}">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12 mb-5">
+                <div class="form-group">
+                  <label class="form-label" for="video">Ubah Video Iklan</label>
+                  <br>
+                  <input type="file" id="video" name="video" value="{{ .Iklan.Video }}">
+                  <div class="card mt-2" style="width: 20rem;">
+                    <video width="320" height="240" controls>
+                      <source src="{{ .Iklan.Video }}" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-12 mb-5">
+                <div class="form-group">
+                  <label for="description">Deskripsi</label>
+                  <textarea name="description" class="form-control" id="description" rows="4" cols="5"
+                    placeholder="Deskripsi Iklan" required>{{ .Iklan.Description }}</textarea>
+                </div>
+              </div>
+
+              <div class="col-12 mt-4">
+                <a href="/admin/iklan" class="btn btn-dark">Batal</a>
+                &nbsp;
+                <button type="submit" class="btn btn-warning">Simpan</button>
+              </div>
+
+            </div>
+
+          </form>
+
+          <!-- <form method="post" action="/admin/iklan/edit" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="name">Nama Iklan</label>
+              <input type="text" class="form-control" name="name" id="name" placeholder="Nama Iklan"
+                value="{{ .Iklan.Name }}">
+            </div>
+            <div class="form-group">
+              <label for="image">Foto Iklan</label>
+              <br>
+              <div class="col-4"><img src="{{ .Iklan.Image }}" alt="{{ .Iklan.Image }}"></div>
+              <br>
+              <input type="file" name="image" id=" image" accept="image/png, image/jpeg, image/jpg"
+                value="{{ .Iklan.Image }}">
+            </div>
+            <div class="form-group">
+              <label for="video">Video Iklan</label>
+              <br>
+              <input type="file" name="video" id=" video" accept="video/mp4, video/mkv" value="{{ .Iklan.Video }}">
+            </div>
+            <div class="form-group">
+              <label for="description">Deskripsi</label>
+              <textarea rows="6" class="form-control" name="description"
+                id="description">{{ .Iklan.Description }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-warning">Simpan</button>
+            &nbsp;
+            <a href="/admin/iklan" class="btn btn-dark">Back</a>
+          </form>
+ -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+{{ template "admin/templates/admin_footer" .}}
