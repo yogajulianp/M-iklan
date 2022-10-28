@@ -9,11 +9,12 @@ import (
 
 type Iklan struct {
 	gorm.Model
-	Name        string
-	Image       string
-	Video       string
-	Description string
-	View        int `gorm:"default:0"`
+	Id          int    `form:"id" json:"id" validate:"required"`
+	Name        string `form:"name" json:"name" validate:"required"`
+	Image       string `form:"image" json:"image"`
+	Video       string `form:"video" json:"video"`
+	Description string `form:"description" json:"description" validate:"required"`
+	View        int    `gorm:"default:0"`
 	Revenue     float64
 	Vendor_fk   int
 	IsPublished bool `gorm:"default:false"`
@@ -75,3 +76,38 @@ func RevenueCalculation(revenue float64) float64 {
 
 	return float64(revenue)
 }
+
+// CRUD Iklan
+// CREATE /admin/iklan/create
+func CreateIklan(db *gorm.DB, newIklan *Iklan) (err error) {
+	err = db.Create(newIklan).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// READ /admin/iklan
+// func ReadAllIklan(db *gorm.DB, iklans *[]Iklan) (err error) {
+func ReadIklans(db *gorm.DB, iklans *[]Iklan) (err error) {
+	err = db.Find(iklans).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UPDATE /admin/iklan/:id
+func UpdateIklan(db *gorm.DB, iklan *Iklan) (err error) {
+	db.Save(iklan)
+
+	return nil
+}
+
+// DELETE /admin/iklan/:id
+func DeleteIklanById(db *gorm.DB, iklan *Iklan, id int) (err error) {
+	db.Where("id=?", id).Delete(iklan)
+
+	return nil
+}
+
