@@ -40,6 +40,13 @@ func (ads *AdsDisplay) GetAdsImage(c *fiber.Ctx) error {
 
 	dataIklan := listIklan[rand.Intn(len(listIklan))]
 
+	dataIklan.View++
+	err = models.UpdatePublikasiIklan(ads.db, &dataIklan)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.ErrInternalServerError)
+	}
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":       fiber.StatusOK,
 		"image_path": fmt.Sprintf("localhost%s/ads/image/%s", os.Getenv("SERVER_PORT"), dataIklan.Image),
@@ -59,6 +66,13 @@ func (ads *AdsDisplay) GetAdsAllType(c *fiber.Ctx) error {
 	rand.Seed(time.Now().Unix())
 
 	dataIklan := listIklan[rand.Intn(len(listIklan))]
+
+	dataIklan.View++
+	err = models.UpdatePublikasiIklan(ads.db, &dataIklan)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.ErrInternalServerError)
+	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":       fiber.StatusOK,
@@ -80,6 +94,13 @@ func (ads *AdsDisplay) GetAdsById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": err.Error()})
 	}
 
+	iklan.View++
+	err = models.UpdatePublikasiIklan(ads.db, iklan)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.ErrInternalServerError)
+	}
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":       fiber.StatusOK,
 		"image_path": fmt.Sprintf("localhost%s/ads/image/%s", os.Getenv("SERVER_PORT"), iklan.Image),
@@ -97,6 +118,13 @@ func (ads *AdsDisplay) GetAdsVideo(c *fiber.Ctx) error {
 	rand.Seed(time.Now().Unix())
 
 	dataIklan := listIklan[rand.Intn(len(listIklan))]
+
+	dataIklan.View++
+	err = models.UpdatePublikasiIklan(ads.db, &dataIklan)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.ErrInternalServerError)
+	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code":       fiber.StatusOK,
