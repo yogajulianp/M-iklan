@@ -4,61 +4,49 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/M-iklan/models"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
-
-	"github.com/M-iklan/models"
 )
 
-type Iklan struct {
+type IklanAPI struct {
 	Db *gorm.DB
 }
 
-func NewIklan(db *gorm.DB) *Iklan {
-	return &Iklan{Db: db}
+func NewIklanAPI(db *gorm.DB) *IklanAPI {
+	return &IklanAPI{Db: db}
 }
 
 // Routing
-func (iklancontroller *Iklan) RouteIklan(app *fiber.App) {
-	router := app.Group("/admin/iklan")
-	router.Get("/", iklancontroller.GetAllIklan)
-	router.Get("/create", iklancontroller.AddIklan)
-	router.Post("/create", iklancontroller.AddPostedIklan)
-	router.Get("/detail/:id", iklancontroller.DetailIklan)
-	router.Get("/edit/:id", iklancontroller.EditIklan)
-	router.Post("/edit/:id", iklancontroller.AddEditedIklan)
-	router.Get("/delete/:id", iklancontroller.DeleteIklan)
+func (iklanapicontroller *IklanAPI) RouteIklanAPI(app *fiber.App) {
+	router := app.Group("/admin/iklan/api")
+	router.Get("/", iklanapicontroller.GetAllIklanAPI)
+	router.Post("/create", iklanapicontroller.CreateIklanAPI)
+	router.Get("/detail/:id", iklanapicontroller.DetailIklanAPI)
+	router.Put("/edit/:id", iklanapicontroller.EditIklanAPI)
+	router.Delete("/delete/:id", iklanapicontroller.DeleteIklanAPI)
 }
 
-// GET /admin/iklan
-func (iklancontroller *Iklan) GetAllIklan(c *fiber.Ctx) error {
-	// Load all Iklans
+// GET /admin/iklan/api
+func (iklanapicontroller *IklanAPI) GetAllIklanAPI(c *fiber.Ctx) error {
+	// Load all iklans
 	var iklans []models.Iklan
-	err := models.ReadIklans(iklancontroller.Db, &iklans)
+	err := models.ReadIklans(iklanapicontroller.Db, &iklans)
 	if err != nil {
 		return c.SendStatus(500)
 	}
 
-	return c.Render("admin/iklan/index", fiber.Map{
-		"Title":  "M-Iklan",
+	return c.JSON(fiber.Map{
 		"Iklans": iklans,
 	})
 }
 
-// GET /admin/iklan/create
-func (iklancontroller *Iklan) AddIklan(c *fiber.Ctx) error {
-	return c.Render("admin/iklan/create", fiber.Map{
-		"Title": "Tambah Iklan",
-	})
-}
-
-// POST /admin/iklan/create
-func (iklancontroller *Iklan) AddPostedIklan(c *fiber.Ctx) error {
-	//myform := new(models.Iklan)
+// POST /admin/iklan/api/create
+func (iklanapicontroller *IklanAPI) CreateIklanAPI(c *fiber.Ctx) error {
 	var iklan models.Iklan
 
 	if err := c.BodyParser(&iklan); err != nil {
-		return c.Redirect("/admin/iklan")
+		return c.SendStatus(400)
 	}
 
 	// Get image
@@ -103,18 +91,21 @@ func (iklancontroller *Iklan) AddPostedIklan(c *fiber.Ctx) error {
 		}
 	}
 
-	// save iklan
-	err := models.CreateIklan(iklancontroller.Db, &iklan)
+	// Save data iklan
+	err := models.CreateIklan(iklanapicontroller.Db, &iklan)
 	if err != nil {
-		return c.Redirect("/admin/iklan")
+		return c.SendStatus(400)
 	}
 	// if succeed
-	return c.Redirect("/admin/iklan")
+	return c.JSON(fiber.Map{
+		"status": 200,
+		"Iklans": iklan,
+	})
 }
 
-// GET /admin/iklan/detail:id
-func (iklancontroller *Iklan) DetailIklan(c *fiber.Ctx) error {
-	params := c.AllParams() // "{"id": "1"}"
+// GET /admin/iklan/api/detail:id
+func (iklanapicontroller *IklanAPI) DetailIklanAPI(c *fiber.Ctx) error {
+	params := c.AllParams()
 
 	intId, errs := strconv.Atoi(params["id"])
 
@@ -123,37 +114,19 @@ func (iklancontroller *Iklan) DetailIklan(c *fiber.Ctx) error {
 	}
 
 	var iklan models.Iklan
-	err := models.ReadIklanById(iklancontroller.Db, &iklan, intId)
+	err := models.ReadIklanById(iklanapicontroller.Db, &iklan, intId)
 	if err != nil {
 		return c.SendStatus(500)
 	}
 
-	return c.Render("admin/iklan/detail", fiber.Map{
-		"Title": "Detail Iklan",
-		"Iklan": iklan,
+	return c.JSON(fiber.Map{
+		"status": 200,
+		"Iklans": iklan,
 	})
 }
 
-// GET /admin/iklan/ubah/:id
-func (iklancontroller *Iklan) EditIklan(c *fiber.Ctx) error {
-	params := c.AllParams() // "{"id": "1"}"
-
-	intId, _ := strconv.Atoi(params["id"])
-
-	var iklan models.Iklan
-	err := models.ReadIklanById(iklancontroller.Db, &iklan, intId)
-	if err != nil {
-		return c.SendStatus(500)
-	}
-
-	return c.Render("admin/iklan/edit", fiber.Map{
-		"Title": "Ubah Iklan",
-		"Iklan": iklan,
-	})
-}
-
-// POST /admin/iklan/ubah/:id
-func (iklancontroller *Iklan) AddEditedIklan(c *fiber.Ctx) error {
+// PUT /admin/iklan/api/edit/:id
+func (iklanapicontroller *IklanAPI) EditIklanAPI(c *fiber.Ctx) error {
 	var iklan models.Iklan
 
 	params := c.AllParams() // "{"id": "1"}"
@@ -161,7 +134,7 @@ func (iklancontroller *Iklan) AddEditedIklan(c *fiber.Ctx) error {
 	iklan.Id = intId
 
 	if err := c.BodyParser(&iklan); err != nil {
-		return c.Redirect("/admin/iklan/edit")
+		return c.SendStatus(400)
 	}
 
 	// Get image
@@ -206,17 +179,21 @@ func (iklancontroller *Iklan) AddEditedIklan(c *fiber.Ctx) error {
 		}
 	}
 
-	// save iklan
-	err := models.UpdateIklan(iklancontroller.Db, &iklan)
+	// Save iklan
+	err := models.UpdateIklan(iklanapicontroller.Db, &iklan)
 	if err != nil {
-		return c.Redirect("/admin/iklan/edit")
+		return c.SendStatus(400)
 	}
+
 	// if succeed
-	return c.Redirect("/admin/iklan/edit")
+	return c.JSON(fiber.Map{
+		"status": 200,
+		"Iklans": iklan,
+	})
 }
 
-// GET /admin/iklan/hapus/:id
-func (iklancontroller *Iklan) DeleteIklan(c *fiber.Ctx) error {
+// GET /admin/iklan/api/hapus/:id
+func (iklanapicontroller *IklanAPI) DeleteIklanAPI(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
 	intId, errs := strconv.Atoi(params["id"])
@@ -226,10 +203,12 @@ func (iklancontroller *Iklan) DeleteIklan(c *fiber.Ctx) error {
 	}
 
 	var iklan models.Iklan
-	err := models.DeleteIklanById(iklancontroller.Db, &iklan, intId)
+	err := models.DeleteIklanById(iklanapicontroller.Db, &iklan, intId)
 	if err != nil {
 		return c.SendStatus(500)
 	}
 
-	return c.Redirect("/admin/iklan")
+	return c.JSON(fiber.Map{
+		"message": "Data berhasil dihapus!",
+	})
 }

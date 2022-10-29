@@ -1,0 +1,56 @@
+{{ template "admin/templates/admin_header" .}}
+{{ template "admin/templates/admin_sidebar" .}}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <h1 class="h3 mb-2 text-gray-800">Data Iklan</h1>
+
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <a href="/admin/iklan/create" class="btn btn-warning"><i class="fas fa-plus fa-sm fa-fw"></i> Tambah Iklan</a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Iklan</th>
+              <th>Foto</th>
+              <th>Video</th>
+              <th>Deskripsi</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{range .Iklans}}
+            <tr>
+              <td>{{ .Id }}</td>
+              <td>{{ .Name }}</td>
+              <td><img src="{{ .Image }}" width="250px" alt="iklan-images"></td>
+              <td><img src="{{ .Video }}" width="250px" alt="iklan-videos"></td>
+              <td>{{ .Description }}</td>
+              <td>
+                <a href="/admin/iklan/detail/{{ .Id }}" class="btn btn-secondary"><i
+                    class="fas fa-eye fa-sm fa-fw"></i></a>
+                <a href="/admin/iklan/edit/{{ .Id }}" class="btn btn-primary"><i
+                    class="fas fa-edit fa-sm fa-fw"></i></a>
+                <a href="/admin/iklan/delete/{{ .Id }}" class="btn btn-danger"><i
+                    class="fas fa-trash fa-sm fa-fw"></i></a>
+              </td>
+            </tr>
+            {{end}}
+          </tbody>
+        </table>
+        <a href="/admin/iklan/create" class="btn btn-warning">Add Product</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- /.container-fluid -->
+
+{{ template "admin/templates/admin_footer" .}}

@@ -7,6 +7,7 @@ import (
 	"github.com/M-iklan/controller"
 	"github.com/M-iklan/database"
 	"github.com/M-iklan/models"
+	"github.com/M-iklan/route"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"
 	"github.com/joho/godotenv"
@@ -40,9 +41,16 @@ func main() {
 	})
 	app.Static("/public", "./public")
 
+	route.RouteInit(app)
 	adsDisplay := controller.NewAdsDisplay(db)
+	iklancontroller := controller.NewIklan(db)
+	iklanapicontroller := controller.NewIklanAPI(db)
+	admincontroller := controller.InitAdminController(db)
 
+	admincontroller.AdminDashboardRoute(app)
 	adsDisplay.MountRouter(app)
+	iklancontroller.RouteIklan(app)
+	iklanapicontroller.RouteIklanAPI(app)
 
 	app.Get("/dashboard", func(c *fiber.Ctx) error {
 

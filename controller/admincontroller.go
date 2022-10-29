@@ -12,26 +12,34 @@ type AdminController struct {
 }
 
 func InitAdminController(db *gorm.DB) *AdminController {
+
 	return &AdminController{Db: db}
 }
 
 // route
-func (controller *AdminController) AdminDashboardRoute(app *fiber.App) {
-	stat := app.Group("/admindashboard")
-	stat.Get("/", controller.GetVendor)
-	stat.Post("/detailvendor/:id", controller.GetDetailVendor) // input form name, qunatity, price, picture
+func (admincontroller *AdminController) AdminDashboardRoute(app *fiber.App) {
+	admin := app.Group("/admindashboard")
+	admin.Get("/", admincontroller.GetAllVendor)
 }
 
 // Get AdminDashboard
 
-func (controller *AdminController) GetAllVendor(app *fiber.App) {
+func (admincontroller *AdminController) GetAllVendor(c *fiber.Ctx) error {
 	var admin []models.Admin
-	err := models.ReadAdmin(controller.Db, &admin)
-	if err != nil {
-		return app.SendStatus(500) // http 500 internal server error
+	erradmin := models.ReadAdmin(admincontroller.Db, &admin)
+	if erradmin != nil {
+		return c.SendStatus(500)
 	}
-	return app.Render("adminvideo/dashboardadmin", fiber.Map{
-		"Title": "Daftar Vendor",
-		"Admin": admin,
+
+	var vendor []models.Vendor
+	errvendor := models.ReadVendor(admincontroller.Db, &vendor)
+	if errvendor != nil {
+		return c.SendStatus(500)
+	}
+
+	return c.Render("dashboardadmin", fiber.Map{
+		"Title":  "Daftar Vendor",
+		"Admin":  admin,
+		"Vendor": vendor,
 	})
 }

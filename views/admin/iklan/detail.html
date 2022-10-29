@@ -1,0 +1,98 @@
+{{ template "admin/templates/admin_header" .}}
+{{ template "admin/templates/admin_sidebar" .}}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-warning">
+        Detail Iklan
+      </h6>
+    </div>
+
+    <div class="card-body">
+
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <h6>Nama Iklan</h6>
+          </div>
+        </div>
+
+        <h6>:</h6>
+
+        <div class="col-6">
+          <div class="form-group">
+            <h6><b>{{ .Iklan.Name }}</b></h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <h6>Deskripsi Iklan</h6>
+          </div>
+        </div>
+
+        <h6>:</h6>
+
+        <div class="col-6">
+          <div class="form-group">
+            <h6><b>{{ .Iklan.Description }}</b></h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <h6>Foto Iklan</h6>
+          </div>
+        </div>
+
+        <h6>:</h6>
+
+        <div class="col-6">
+          <div class="form-group">
+            <div class="card" style="width: 20rem;">
+              <img src="{{ .Iklan.Image }}" class="img-fluid" alt="{{ .Iklan.Name }}">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <h6>Video Iklan</h6>
+          </div>
+        </div>
+
+        <h6>:</h6>
+
+        <div class="col-6">
+          <div class="form-group">
+            <div class="card" style="width: 20rem;">
+              <video width="320" height="240" controls>
+                <source src="{{ .Iklan.Video }}" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-4">
+        <a href="/admin/iklan" class="btn btn-dark"><i class="fas fa-arrow-left me-2"></i> Kembali</a>
+        &nbsp;
+      </div>
+
+    </div>
+
+  </div>
+  <!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+{{ template "admin/templates/admin_footer" .}}

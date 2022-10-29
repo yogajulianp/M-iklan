@@ -75,7 +75,7 @@ func RevenueCalculation(revenue float64) float64 {
 }
 
 // CRUD Iklan
-// CREATE /admin/iklan/create
+// CREATE
 func CreateIklan(db *gorm.DB, newIklan *Iklan) (err error) {
 	err = db.Create(newIklan).Error
 	if err != nil {
@@ -84,8 +84,7 @@ func CreateIklan(db *gorm.DB, newIklan *Iklan) (err error) {
 	return nil
 }
 
-// READ /admin/iklan
-// func ReadAllIklan(db *gorm.DB, iklans *[]Iklan) (err error) {
+// READ 
 func ReadIklans(db *gorm.DB, iklans *[]Iklan) (err error) {
 	err = db.Find(iklans).Error
 	if err != nil {
@@ -94,14 +93,14 @@ func ReadIklans(db *gorm.DB, iklans *[]Iklan) (err error) {
 	return nil
 }
 
-// UPDATE /admin/iklan/:id
+// UPDATE
 func UpdateIklan(db *gorm.DB, iklan *Iklan) (err error) {
 	db.Save(iklan)
 
 	return nil
 }
 
-// DELETE /admin/iklan/:id
+// DELETE
 func DeleteIklanById(db *gorm.DB, iklan *Iklan, id int) (err error) {
 	db.Where("id=?", id).Delete(iklan)
 

@@ -1,3 +1,4 @@
+{{template "partials/header" .}}
 <h1>Selamat Datang {{.Admin.Name}}</h1>
 <br>
 <div>
@@ -6,16 +7,15 @@
 		  <tr>
 			<th scope="col">#</th>
 			<th scope="col">Nama Vendor</th>
-			<th scope="col">Jumlah Iklan</th>
 			<th scope="col">Status</th>
 			<th scope="col">Actions</th>
 		  </tr>
 		</thead>
 		<tbody>
 			<tr>
-				<th scope="row">1</th>
-				<td>Djarum Foundation</td>
-				<td>50</td>
+				{{range .Vendor}}
+				<th scope="row">{{.Id}}</th>
+				<td>{{.Name}}</td>
 				<td>Available</td>
 				<td>
 					<a href="#" class="btn btn-outline-info">
@@ -25,7 +25,9 @@
 							Detail 2</a>
 					<a class="btn btn-danger" href="#" role="button">Banned</a>
 				</td>
+				{{end}}
 			</tr>  
 		</tbody>
 	  </table>
 </div>
+{{template "partials/footer" .}}
