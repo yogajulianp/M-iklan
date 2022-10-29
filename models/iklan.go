@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -62,7 +60,6 @@ func GetTotalRevenueVendor(db *gorm.DB, id_vendor int) (float64, int, error) {
 	var countIklan int
 	defer rows.Close()
 	for rows.Next() {
-		fmt.Println("TESTS")
 		rows.Scan(&totalRevenue, &countIklan)
 	}
 	return totalRevenue, countIklan, err
@@ -109,4 +106,3 @@ func DeleteIklanById(db *gorm.DB, iklan *Iklan, id int) (err error) {
 
 	return nil
 }
-

@@ -37,7 +37,7 @@ func (admincontroller *AdminController) GetAllVendor(c *fiber.Ctx) error {
 		return c.SendStatus(500)
 	}
 
-	return c.Render("adminvideo/dashboardadmin", fiber.Map{
+	return c.Render("dashboardadmin", fiber.Map{
 		"Title":  "Daftar Vendor",
 		"Admin":  admin,
 		"Vendor": vendor,
