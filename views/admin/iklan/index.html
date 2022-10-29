@@ -22,6 +22,7 @@
               <th>Foto</th>
               <th>Video</th>
               <th>Deskripsi</th>
+              <th>Info Publish</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -30,9 +31,17 @@
             <tr>
               <td>{{ .Id }}</td>
               <td>{{ .Name }}</td>
-              <td><img src="{{ .Image }}" width="250px" alt="iklan-images"></td>
-              <td><img src="{{ .Video }}" width="250px" alt="iklan-videos"></td>
+              <td><img src="{{ .Image }}" width="150px" alt="iklan-images"></td>
+              <td>
+                <video width="240" height="150" controls>
+                  <source src="{{ .Video }}" type="video/mp4">
+                </video>
+              </td>
               <td>{{ .Description }}</td>
+              <td>
+                <a href="/ads/detailiklan/{{ .Id }}" class="btn btn-info"><i class="fas fa-info fa-sm fa-fw"></i>
+                  Lihat...</a>
+              </td>
               <td>
                 <a href="/admin/iklan/detail/{{ .Id }}" class="btn btn-secondary"><i
                     class="fas fa-eye fa-sm fa-fw"></i></a>
