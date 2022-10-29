@@ -8,6 +8,7 @@ import (
 
 	"github.com/M-iklan/database"
 	"github.com/M-iklan/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 
@@ -26,16 +27,16 @@ func InitVendorController() *VendorController {
 
 
 // routing
-// GET /products
+// GET 
 func (controller *VendorController) SeeVendor(c *fiber.Ctx) error {
-	// load all products
+	// load all vendor
 	var vendors []models.Vendor
 	err := models.ReadVendor(controller.Db, &vendors)
 	if err!=nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
-	return c.Render("products", fiber.Map{
-		"Title": "Daftar Iklan",
+	return c.Render("vendor", fiber.Map{
+		"Title": "Daftar Vendor",
 		"Vendor": vendors,
 	})
 }
@@ -45,20 +46,27 @@ func (controller *VendorController) FormRegisVendor(c *fiber.Ctx) error {
 		"Title": "Registrasi Vendor",
 	})
 }
+
+
 // POST /products/create
+
 func (controller *VendorController) RegisVendor(c *fiber.Ctx) error {
-	//myform := new(models.Product)
-	var myform models.Vendor
+	var regis models.Vendor
 
-	if err := c.BodyParser(&myform); err != nil {
+		if err := c.BodyParser(&regis); err != nil {
+			return c.Redirect("/register")
+		}
+
+		bytes, _ := bcrypt.GenerateFromPassword([]byte(regis.Password), 8)
+		sHash := string(bytes)
+		
+		regis.Password = sHash
+
+		err := models.RegisVendor(controller.Db, &regis)
+
+		if err != nil {
+			return c.Redirect("/register")
+		}
+		
 		return c.Redirect("/login")
-	}
-	// save product
-	err := models.RegisVendor(controller.Db, &myform)
-	if err!=nil {
-		return c.Redirect("/login")
-	}
-	// if succeed
-	return c.Redirect("/login")	
 }
-

@@ -25,6 +25,8 @@ func RegisVendor(db *gorm.DB, newVendor *Vendor) (err error) {
 	}
 	return nil
 }
+
+
 func ReadVendor(db *gorm.DB, vendor *[]Vendor)(err error) {
 	err = db.Find(vendor).Error
 	if err != nil {
@@ -41,6 +43,15 @@ func ReadVendorById(db *gorm.DB, vendor *Vendor, id int)(err error) {
 	}
 	return nil
 }
+
+func ReadVendorByUser(db *gorm.DB, login *Vendor, username string) (err error) {
+	err = db.Where(&Vendor{Username: username,}).First(login).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func UpdateVendor(db *gorm.DB, vendor *Vendor)(err error) {
 	db.Save(vendor)
 	
