@@ -23,7 +23,7 @@ func (controller *IklanStatusController) AdminRoute(app *fiber.App) {
 	stat.Put("/editstatus/:id", controller.EditStatusIklan)
 }
 
-// get iklanstatues
+// get iklanstatus
 func (controller *IklanStatusController) GetIklanStatues(c *fiber.Ctx) error {
 	var iklanStatuses []models.IklanStatus
 	err := models.ReadIklanStatus(controller.Db, &iklanStatuses)
@@ -80,7 +80,7 @@ func (controller *IklanStatusController) EditStatusIklan(c *fiber.Ctx) error {
 	}
 	statusIklan.IklanID = updateStatus.IklanID
 
-	// save product
+	// save iklan status
 	models.UpdateIklanStatus(controller.Db, &statusIklan)
 
 	return c.JSON(statusIklan)
